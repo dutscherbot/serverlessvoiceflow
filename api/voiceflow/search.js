@@ -236,7 +236,7 @@ function extractBrand(query) {
  * POST /api/voiceflow/search
  * Smart search endpoint with multi-step filtering support
  */
-app.post('/api/voiceflow/search', async (req, res) => {
+app.post('/', async (req, res) => {
   try {
     // Validate incoming query from Voiceflow
     const { query, limit } = req.body;
@@ -1530,7 +1530,7 @@ app.delete('/api/voiceflow/delete-product', async (req, res) => {
 });
 
 // Health check endpoint with MongoDB connection test
-app.get('/api/voiceflow/search', async (req, res) => {
+app.get('/', async (req, res) => {
   const health = {
     status: 'ok',
     message: 'Voiceflow-MongoDB Search API is running',
