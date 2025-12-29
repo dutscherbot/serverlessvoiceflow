@@ -1,17 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/**/*.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/voiceflow/(search|browse|smart-search|add-product|add-products|update-product|delete-product)",
-      "dest": "/api/voiceflow/search.js"
-    }
-  ],
   "env": {
     "NODE_ENV": "production"
   }
