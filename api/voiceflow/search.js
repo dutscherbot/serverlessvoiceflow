@@ -1,8 +1,22 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
 
-// Initialize Express app
+// Initialize Express app with CORS support
 const app = express();
+
+// Enable CORS for all origins
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  next();
+});
+
 app.use(express.json());
 
 // Environment variables with fallback constants for development
@@ -236,7 +250,7 @@ function extractBrand(query) {
  * POST /api/voiceflow/search
  * Smart search endpoint with multi-step filtering support
  */
-app.post('/', async (req, res) => {
+app.post('/api/voiceflow/search', async (req, res) => {
   try {
     // Validate incoming query from Voiceflow
     const { query, limit } = req.body;
@@ -1530,7 +1544,7 @@ app.delete('/api/voiceflow/delete-product', async (req, res) => {
 });
 
 // Health check endpoint with MongoDB connection test
-app.get('/', async (req, res) => {
+app.get('/api/voiceflow/search', async (req, res) => {
   const health = {
     status: 'ok',
     message: 'Voiceflow-MongoDB Search API is running',
@@ -1575,7 +1589,7 @@ app.get('/', async (req, res) => {
   }
 });
 
-// Export the Express app for Vercel
+// Export the Express app as a Vercel serverless function
 module.exports = app;
 
 
