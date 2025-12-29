@@ -1,22 +1,8 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
 
-// Initialize Express app with CORS support
+// Initialize Express app
 const app = express();
-
-// Enable CORS for all origins
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
-  // Handle preflight
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  next();
-});
-
 app.use(express.json());
 
 // Environment variables with fallback constants for development
@@ -24,6 +10,14 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://username:password@clus
 const DB_NAME = process.env.DB_NAME || 'your_database_name';
 const COLLECTION_NAME = process.env.COLLECTION_NAME || 'products';
 const SEARCH_INDEX_NAME = process.env.SEARCH_INDEX_NAME || 'default';
+
+// Debug: Log environment variable presence (not values for security)
+console.log('Environment check:', {
+  hasMongoUri: !!process.env.MONGO_URI,
+  hasDbName: !!process.env.DB_NAME,
+  hasCollectionName: !!process.env.COLLECTION_NAME,
+  dbNameValue: DB_NAME
+});
 
 // MongoDB client singleton (connection pooling)
 let cachedClient = null;
@@ -250,7 +244,7 @@ function extractBrand(query) {
  * POST /api/voiceflow/search
  * Smart search endpoint with multi-step filtering support
  */
-app.post('/api/voiceflow/search', async (req, res) => {
+app.post('/', async (req, res) => {
   try {
     // Validate incoming query from Voiceflow
     const { query, limit } = req.body;
@@ -1544,7 +1538,7 @@ app.delete('/api/voiceflow/delete-product', async (req, res) => {
 });
 
 // Health check endpoint with MongoDB connection test
-app.get('/api/voiceflow/search', async (req, res) => {
+app.get('/', async (req, res) => {
   const health = {
     status: 'ok',
     message: 'Voiceflow-MongoDB Search API is running',
@@ -1589,7 +1583,7 @@ app.get('/api/voiceflow/search', async (req, res) => {
   }
 });
 
-// Export the Express app as a Vercel serverless function
+// Export the Express app for Vercel
 module.exports = app;
 
 
